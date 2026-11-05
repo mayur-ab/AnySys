@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; connect-src ws: wss:; media-src 'self' blob:">
+  <title>AnySys</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="renderer.js"></script>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="logo" aria-hidden="true">↗</span> AnySys</div>
+    <span class="badge">WINDOWS REMOTE DESKTOP</span>
+  </header>
+  <main>
+    <p id="notice" class="notice" role="status" hidden></p>
+    <section id="home">
+      <p class="eyebrow">PERSONAL REMOTE ACCESS</p>
+      <h1>One invite. Two PCs.</h1>
+      <p class="intro">Share a Windows display with a friend, or join a session they started.</p>
+      <div class="cards">
+        <form id="host-form" class="card">
+          <p class="eyebrow">HOST</p>
+          <h2>Share this PC</h2>
+          <p>Your friend can connect after you approve their request.</p>
+          <label for="display">Display</label>
+          <select id="display" required></select>
+          <label class="check"><input id="audio" type="checkbox"> Share system audio</label>
+          <button class="primary" type="submit">Create invite</button>
+        </form>
+        <form id="join-form" class="card">
+          <p class="eyebrow">VIEWER</p>
+          <h2>Connect to a friend</h2>
+          <p>Paste the invite they sent you to request access.</p>
+          <label for="invite-in">Session invite</label>
+          <textarea id="invite-in" placeholder="Paste an AnySys invite" maxlength="8192" required spellcheck="false"></textarea>
+          <button type="submit">Request access</button>
+        </form>
+      </div>
+      <details class="network">
+        <summary>Host network settings</summary>
+        <label for="server">Signaling URL</label>
+        <input id="server" type="text" spellcheck="false" value="ws://127.0.0.1:8787/signal">
+        <label for="ice">ICE servers (optional JSON)</label>
+        <textarea id="ice" placeholder='[{"urls":"turn:relay.example.com:3478","username":"…","credential":"…"}]' maxlength="7500" spellcheck="false"></textarea>
+        <label class="check"><input id="relay" type="checkbox"> Require a TURN relay</label>
+        <p class="hint">The invite contains the network configuration, including any TURN credentials you enter.</p>
+      </details>
+    </section>
+
+    <section id="waiting" class="card state" hidden>
+      <p class="eyebrow" id="waiting-tag">HOST</p>
+      <h1 id="waiting-title">Invite ready</h1>
+      <p id="waiting-text"></p>
+      <div id="outgoing" hidden>
+        <label for="invite-out">Private, single-use invite</label>
+        <textarea id="invite-out" readonly spellcheck="false"></textarea>
+        <button class="primary" id="copy" type="button">Copy invite</button>
+      </div>
+      <div id="approval" hidden>
+        <label class="check"><input id="allow-control" type="checkbox"> Allow mouse and keyboard control</label>
+        <button class="primary" id="approve" type="button">Approve and share</button>
+      </div>
+      <button id="cancel" class="quiet" type="button">Cancel</button>
+    </section>
+
+    <section id="host-active" class="card state" hidden>
+      <p class="eyebrow">HOST</p>
+      <h1>You’re sharing</h1>
+      <p id="sharing-status"></p>
+      <p>Press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>F12</kbd> on this PC to stop.</p>
+      <button id="stop-host" class="danger" type="button">Stop sharing</button>
+    </section>
+
+    <section id="view" hidden>
+      <div class="viewer-bar">
+        <div>
+          <p class="eyebrow">REMOTE DISPLAY</p>
+          <p id="control-status">Connecting…</p>
+        </div>
+        <button id="play-audio" type="button" hidden>Play stream</button>
+        <button id="disconnect" class="danger" type="button">Disconnect</button>
+      </div>
+      <div id="viewport" tabindex="0" aria-label="Remote display. Press Control Shift F8 to exit keyboard capture.">
+        <video id="remote" autoplay playsinline></video>
+        <div id="remote-loading">Waiting for the first frame…</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

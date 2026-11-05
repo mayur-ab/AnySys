@@ -1,0 +1,32 @@
+{
+  "name": "anysys",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Attended Windows screen sharing and remote control",
+  "main": "app/main.cjs",
+  "scripts": {
+    "build:native": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/build-native.ps1",
+    "start": "npm run build:native && electron .",
+    "signal": "node signaling/server.cjs",
+    "test": "node --test",
+    "dist": "npm run build:native && electron-builder --win portable --x64"
+  },
+  "dependencies": {
+    "ws": "8.22.1"
+  },
+  "devDependencies": {
+    "electron": "45.2.3",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "local.anysys.desktop",
+    "productName": "AnySys",
+    "files": ["app/**/*"],
+    "extraResources": [
+      { "from": "build/AnySys.Input.exe", "to": "AnySys.Input.exe" }
+    ],
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "win": { "signAndEditExecutable": false }
+  }
+}

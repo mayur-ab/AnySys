@@ -1,0 +1,19 @@
+# Dependencies and generated builds
+node_modules/
+/build/
+/dist/
+npm-debug.log*
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Windows Explorer metadata
+Thumbs.db
+Desktop.ini
